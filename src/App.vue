@@ -1,8 +1,22 @@
 <template>
   <div id="app">
     <div class="jsp-demo--container">
-      <div id="item_left" class="item"></div>
-      <div id="item_right" class="item" style="margin-left:50px;"></div>
+      <div id="item_left" class="item">
+        <ul>
+          <li id="item_li_1"></li>
+          <li id="item_li_2"></li>
+          <li id="item_li_3"></li>
+          <li id="item_li_4"></li>
+        </ul>
+      </div>
+      <div id="item_right" class="item" style="margin-left:50px;">
+        <ul>
+          <li id="item_right_li_1"></li>
+          <li id="item_right_li_2"></li>
+          <li id="item_right_li_3"></li>
+          <li id="item_right_li_4"></li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -37,7 +51,7 @@ export default {
         },
         // 设置连接点样式
         EndpointStyle: {
-          radius: 5,
+          radius: 4,
           fill: '#61B7CF'
         },
         // 设置连接点位置
@@ -48,33 +62,38 @@ export default {
         ConnectionsDetachable: true
       })
       // 将整个节点作为source或者target
-      this.instance.makeSource('item_left', {
-        endpoint:"Dot",
-        anchor: "Continuous"
-      })
-      this.instance.makeTarget('item_right', {
-        endpoint:"Dot",
-        anchor: "Continuous"
-      })
-      this.instance.draggable('item_left')
-      this.instance.draggable('item_right')
-
-      // 增加item_left、 item_right 端点
-      var common = {
-        isSource: true,
-        isTarget: true,
-        connector: ['Straight']
+      for (let i = 1; i <= 4; i++) {
+        this.instance.makeSource('item_li_' + i, {
+          endpoint: 'Dot',
+          anchor: 'Continuous'
+        })
+        this.instance.makeTarget('item_li_' + i, {
+          endpoint: 'Dot',
+          anchor: 'Continuous'
+        })
+        this.instance.makeTarget('item_right_li_' + i, {
+          endpoint: 'Dot',
+          anchor: 'Continuous'
+        })
+        this.instance.makeSource('item_right_li_' + i, {
+          endpoint: 'Dot',
+          anchor: 'Continuous'
+        })
+        this.instance.draggable(`item_li_${i}`)
+        this.instance.draggable(`item_right_li_${i}`)
+        // 增加item_left、 item_right 端点
+        var common = {
+          isSource: true,
+          isTarget: true,
+          connector: ['Bezier']
+        }
+        this.instance.addEndpoint(`item_li_${i}`, {
+          anchors: ['Right', 'Top', 'Bottom']
+        }, common)
+        this.instance.addEndpoint(`item_right_li_${i}`, {
+          anchors: ['Left', 'Top', 'Bottom']
+        }, common)
       }
-      this.instance.addEndpoint('item_left', {
-        anchors: ['Right', 'Top', 'Bottom']
-      }, common)
-      this.instance.addEndpoint('item_right', {
-        anchors: ['Left']
-      }, common)
-      // 单击连接线，删除连接线
-      this.instance.bind('click', (conn, originalEvent) => {
-        this.instance.deleteConnection(conn)
-      })
     }
   }
 }
@@ -94,5 +113,16 @@ export default {
   border: 1px solid #000;
   border-radius: 5px;
   cursor: pointer;
+}
+.item ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ul li {
+  width: 100%;
+  height: 20px;
+  background-color: #000;
+  margin-bottom: 5px;
 }
 </style>
