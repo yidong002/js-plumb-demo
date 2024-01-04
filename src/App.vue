@@ -1,33 +1,73 @@
 <template>
   <div id="app">
     <div class="jsp-demo--container">
-      <div id="item_left" class="item">
-        <ul>
-          <li id="item_li_1"></li>
-          <li id="item_li_2"></li>
-          <li id="item_li_3"></li>
-          <li id="item_li_4"></li>
-        </ul>
+        <div id="item_left" class="item">
+          <!-- table -->
+          <table border >
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>姓名</th>
+                <th>地址</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in table" :id="`left_row_${index+1}`" :key="`left_row_${index+1}`">
+                <td>{{ item.date }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.address }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="item_right" class="item" style="margin-left:50px;">
+          <!-- table -->
+          <table border>
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>姓名</th>
+                <th>地址</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in table" :id="`right_row_${index+1}`" :key="`right_row_${index+1}`">
+                <td>{{ item.date }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.address }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div id="item_right" class="item" style="margin-left:50px;">
-        <ul>
-          <li id="item_right_li_1"></li>
-          <li id="item_right_li_2"></li>
-          <li id="item_right_li_3"></li>
-          <li id="item_right_li_4"></li>
-        </ul>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
-
 export default {
   name: 'App',
   data() {
     return {
-      instance: null
+      instance: null,
+      table: [
+        {
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄',
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄',
+        }, {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }
+      ]
     }
   },
   beforeDestroy() {
@@ -61,36 +101,37 @@ export default {
         // 设置连接线是否可拖动重新连接
         ConnectionsDetachable: true
       })
+      
       // 将整个节点作为source或者target
-      for (let i = 1; i <= 4; i++) {
-        this.instance.makeSource('item_li_' + i, {
+      for (let i = 1; i <= this.table.length; i++) {
+        this.instance.makeSource('left_row_' + i, {
           endpoint: 'Dot',
           anchor: 'Continuous'
         })
-        this.instance.makeTarget('item_li_' + i, {
+        this.instance.makeTarget('left_row_' + i, {
           endpoint: 'Dot',
           anchor: 'Continuous'
         })
-        this.instance.makeTarget('item_right_li_' + i, {
+        this.instance.makeTarget('right_row_' + i, {
           endpoint: 'Dot',
           anchor: 'Continuous'
         })
-        this.instance.makeSource('item_right_li_' + i, {
+        this.instance.makeSource('right_row_' + i, {
           endpoint: 'Dot',
           anchor: 'Continuous'
         })
-        this.instance.draggable(`item_li_${i}`)
-        this.instance.draggable(`item_right_li_${i}`)
+        this.instance.draggable(`left_row_${i}`)
+        this.instance.draggable(`right_row_${i}`)
         // 增加item_left、 item_right 端点
         var common = {
           isSource: true,
           isTarget: true,
           connector: ['Bezier']
         }
-        this.instance.addEndpoint(`item_li_${i}`, {
+        this.instance.addEndpoint(`left_row_${i}`, {
           anchors: ['Right', 'Top', 'Bottom']
         }, common)
-        this.instance.addEndpoint(`item_right_li_${i}`, {
+        this.instance.addEndpoint(`right_row_${i}`, {
           anchors: ['Left', 'Top', 'Bottom']
         }, common)
       }
@@ -106,23 +147,5 @@ export default {
   align-items: center;
   justify-content: space-between;
 }
-.item {
-  width: 100px;
-  height: 100px;
-  background-color: #ccc;
-  border: 1px solid #000;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.item ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-ul li {
-  width: 100%;
-  height: 20px;
-  background-color: #000;
-  margin-bottom: 5px;
-}
+
 </style>
